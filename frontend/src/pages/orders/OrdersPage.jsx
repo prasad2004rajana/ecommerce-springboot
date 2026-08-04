@@ -48,7 +48,7 @@ export function OrdersPage({ cart, loadCart }) {
 
                                 <div className="order-details-grid">
                                     {order.items.map((orderProduct) => {
-                                        console.log(orderProduct);
+                                       
                                         const buyAgain = async () => {
     try {
         await api.post("/cart", {

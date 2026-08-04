@@ -39,11 +39,14 @@
 }
 
 .header .logo {
-  height: 26px;
+  height: 40px;
+  width: auto;
   margin-top: 1px;
 }
 
 .header .mobile-logo {
+  height: 30px;
+  width: auto;
   display: none;
 }
 

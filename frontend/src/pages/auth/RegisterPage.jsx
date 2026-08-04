@@ -19,7 +19,7 @@ export function RegisterPage() {
 
         alert("Registration successful!");
 
-        console.log(response.data);
+        
 
     } catch (error) {
         console.error(error);
