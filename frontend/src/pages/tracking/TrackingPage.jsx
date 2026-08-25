@@ -64,7 +64,7 @@ export function TrackingPage({ cart }) {
 
                     <img
     className="product-image"
-    src={`http://localhost:8080/${tracking.product.image}`}
+    src={`${tracking.product.image}`}
     alt={tracking.product.name}
 />
 

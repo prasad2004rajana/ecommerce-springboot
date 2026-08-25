@@ -1,21 +1,21 @@
 spring:
   application:
     name: ecommerce-backend
+
   datasource:
     url: jdbc:mysql://localhost:3306/ecommerce_db
     username: root
-    password: 
+    password: root123
 
   jpa:
     hibernate:
       ddl-auto: update
 
-      show-sql: true
+    show-sql: true
 
-      properties:
-        hibernate:
-          format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 server:
   port: 8080
-

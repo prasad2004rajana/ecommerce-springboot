@@ -37,7 +37,7 @@ public class ProductDataLoader implements CommandLineRunner {
 
             productRepository.saveAll(products);
 
-           
+            System.out.println("✅ Products Loaded Successfully!");
         }
     }
 }

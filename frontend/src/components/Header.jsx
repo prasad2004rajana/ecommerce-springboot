@@ -26,6 +26,17 @@ export function Header({ cart = [] }) {
             </div>
 
             <div className="right-section">
+
+                <Link className="header-link auth-link" to="/login">
+                    Login
+                </Link>
+
+                <Link className="header-link auth-link" to="/register">
+                    Register
+                </Link>
+
+
+
                 <Link className="orders-link header-link" to="/orders">
 
                     <span className="orders-text">Orders</span>
