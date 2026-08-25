@@ -1,40 +1,52 @@
 import api from '../../api/axios';
-import {useState} from 'react';
-import {formatMoney} from '../../utils/money';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { formatMoney } from '../../utils/money';
+
 export function Product({ product, loadCart }) {
     const [quantity, setQuantity] = useState(1);
+    const navigate = useNavigate();
 
     const addToCart = async () => {
-    try {
-        await api.post('/cart', {
-            productId: product.id,
-            quantity: quantity
-        });
+        try {
+            await api.post('/cart', {
+                productId: product.id,
+                quantity: quantity
+            });
 
-        await loadCart();
-    } catch (error) {
-        console.error(error);
+            await loadCart();
+        } catch (error) {
+            console.error(error);
 
-        if (error.response) {
-            alert(error.response.data.message || "Failed to add to cart");
+            if (error.response?.status === 401) {
+                navigate('/login');
+                return;
+            }
+
+            if (error.response) {
+                alert(error.response.data.message || "Failed to add to cart");
+            }
         }
-    }
-};
+    };
+
     return (
         <div className="product-container">
             <div className="product-image-container">
-                <img className="product-image"
-                    src={product.image} />
+                <img
+                    className="product-image"
+                    src={product.image}
+                />
             </div>
 
             <div className="product-name limit-text-to-2-lines">
                 {product.name}
-
             </div>
 
             <div className="product-rating-container">
-                <img className="product-rating-stars"
-                    src={`images/ratings/rating-${product.rating.stars * 10}.png`} />
+                <img
+                    className="product-rating-stars"
+                    src={`images/ratings/rating-${product.rating.stars * 10}.png`}
+                />
                 <div className="product-rating-count link-primary">
                     {product.rating.count}
                 </div>
@@ -45,21 +57,21 @@ export function Product({ product, loadCart }) {
             </div>
 
             <div className="product-quantity-container">
-               <select
-    value={quantity}
-    onChange={(e) => setQuantity(Number(e.target.value))}
->
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-</select>
+                <select
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
             </div>
 
             <div className="product-spacer"></div>
@@ -69,8 +81,10 @@ export function Product({ product, loadCart }) {
                 Added
             </div>
 
-            <button className="add-to-cart-button button-primary"
-                onClick={addToCart}>
+            <button
+                className="add-to-cart-button button-primary"
+                onClick={addToCart}
+            >
                 Add to Cart
             </button>
         </div>

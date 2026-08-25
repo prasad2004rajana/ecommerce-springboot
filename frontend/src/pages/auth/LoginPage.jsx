@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../../api/axios";
+import { Link } from 'react-router';
 import { useNavigate } from "react-router";
 import "./Auth.css";
 
@@ -56,6 +57,9 @@ export function LoginPage() {
         <button className="auth-button" onClick={handleLogin}>
            Login
         </button>
+        <p>
+    New user? <Link to="/register">Sign Up</Link>
+</p>
       </div>
     </div>
   );

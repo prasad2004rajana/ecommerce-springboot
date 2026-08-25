@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import api from "../../api/axios";
 import "./Auth.css";
 
@@ -8,28 +9,30 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleRegister = async () => {
     try {
-        const response = await api.post("/auth/register", {
-            firstName,
-            lastName,
-            email,
-            password
-        });
+      await api.post("/auth/register", {
+        firstName,
+        lastName,
+        email,
+        password
+      });
 
-        alert("Registration successful!");
+      alert("Registration successful!");
 
-        
+      navigate("/login");
 
     } catch (error) {
-        console.error(error);
+      console.error(error);
 
-        alert(
-            error.response?.data?.message ||
-            "Registration failed."
-        );
+      alert(
+        error.response?.data?.message ||
+        "Registration failed."
+      );
     }
-};
+  };
 
   return (
     <div className="auth-container">
@@ -37,24 +40,25 @@ export function RegisterPage() {
         <h2>Register</h2>
 
         <div className="form-group">
-    <label>First Name</label>
-    <input
-        type="text"
-        placeholder="Enter first name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-    />
-</div>
+          <label>First Name</label>
+          <input
+            type="text"
+            placeholder="Enter first name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
 
-<div className="form-group">
-    <label>Last Name</label>
-    <input
-        type="text"
-        placeholder="Enter last name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-    />
-</div>
+        <div className="form-group">
+          <label>Last Name</label>
+          <input
+            type="text"
+            placeholder="Enter last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
+
         <div className="form-group">
           <label>Email</label>
           <input
@@ -76,7 +80,7 @@ export function RegisterPage() {
         </div>
 
         <button className="auth-button" onClick={handleRegister}>
-           Register
+          Register
         </button>
       </div>
     </div>
