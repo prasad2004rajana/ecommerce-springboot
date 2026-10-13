@@ -34,12 +34,11 @@ export function CheckoutPage({ cart, loadCart }) {
                     </div>
 
                     <div className="checkout-header-middle-section">
-                        Checkout (<a className="return-to-home-link"
-                            href="/">3 items</a>)
+                        Checkout Page
                     </div>
 
                     <div className="checkout-header-right-section">
-                        <img src="images/icons/checkout-lock-icon.png" />
+                        <img src="" />
                     </div>
                 </div>
             </div>

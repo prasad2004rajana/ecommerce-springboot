@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -13,13 +14,11 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // Base64-encoded secret key (must be at least 256 bits)
-    private static final String SECRET_KEY =
-            "VGhpc0lzQVN1cGVyU2VjcmV0S2V5Rm9ySldUV2hpY2hJc0F0TGVhc3QzMkNoYXJhY3RlcnNMb25n";
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private SecretKey getKey(){
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(String email) {
@@ -27,13 +26,13 @@ public class JwtService {
                 .subject(email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSigningKey())
+                .signWith(getKey())
                 .compact();
     }
 
     public String extractUsername(String token) {
         Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
+                .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

@@ -14,6 +14,7 @@ public class DeliveryOptionService {
     private final DeliveryOptionRepository repository;
 
     public List<DeliveryOption> getAllDeliveryOptions() {
+
         return repository.findAll();
     }
 }

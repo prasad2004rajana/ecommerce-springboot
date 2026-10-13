@@ -1,5 +1,6 @@
 package in.ecommerce.ecommerce_backend.service;
 
+
 import in.ecommerce.ecommerce_backend.dto.PaymentSummary;
 import in.ecommerce.ecommerce_backend.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,7 @@ public class PaymentService {
 
         Integer totalItems = cartService.getTotalItems(user);
         Integer productCost = cartService.getItemsTotal(user);
-
-
-
-        Integer shipping = cartService.getShippingCost(user);
+        Integer shipping    = cartService.getShippingCost(user);
 
         Integer totalBeforeTax = productCost + shipping;
 

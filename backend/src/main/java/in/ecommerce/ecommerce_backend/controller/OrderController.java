@@ -3,7 +3,7 @@ package in.ecommerce.ecommerce_backend.controller;
 import in.ecommerce.ecommerce_backend.dto.ProductResponse;
 import in.ecommerce.ecommerce_backend.dto.order.OrderItemResponse;
 import in.ecommerce.ecommerce_backend.dto.order.OrderResponse;
-
+import in.ecommerce.ecommerce_backend.dto.order.TrackingResponse;
 import in.ecommerce.ecommerce_backend.entity.Order;
 import in.ecommerce.ecommerce_backend.entity.OrderItem;
 import in.ecommerce.ecommerce_backend.entity.User;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import in.ecommerce.ecommerce_backend.dto.order.TrackingResponse;
 
 import java.util.List;
 
@@ -40,9 +39,14 @@ public class OrderController {
 
         User user = cartService.getUserByEmail(userDetails.getUsername());
 
-        return orderService.getOrders(user)
-                .stream()
-                .map(this::toResponse)
+        // Fetch all orders for the user
+        List<Order> orders = orderService.getOrders(user);
+
+        // Fetch all order items in one query
+        List<OrderItem> orderItems = orderService.getOrderItems(orders);
+
+        return orders.stream()
+                .map(order -> toResponse(order, orderItems))
                 .toList();
     }
 
@@ -59,6 +63,7 @@ public class OrderController {
 
         return orderService.getOrderItems(order);
     }
+
     @GetMapping("/{orderId}/items/{productId}")
     public TrackingResponse getTracking(
             @PathVariable Long orderId,
@@ -66,10 +71,14 @@ public class OrderController {
 
         return orderService.getTracking(orderId, productId);
     }
-    private OrderResponse toResponse(Order order) {
 
-        List<OrderItemResponse> items = orderService.getOrderItems(order)
-                .stream()
+    private OrderResponse toResponse(
+            Order order,
+            List<OrderItem> orderItems) {
+
+        List<OrderItemResponse> items = orderItems.stream()
+                .filter(item ->
+                        item.getOrder().getId().equals(order.getId()))
                 .map(item -> OrderItemResponse.builder()
                         .quantity(item.getQuantity())
                         .product(

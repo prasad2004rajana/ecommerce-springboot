@@ -1,5 +1,6 @@
 package in.ecommerce.ecommerce_backend.service;
 
+import in.ecommerce.ecommerce_backend.dto.PaymentSummary;
 import org.springframework.transaction.annotation.Transactional;
 import in.ecommerce.ecommerce_backend.entity.CartItem;
 import in.ecommerce.ecommerce_backend.entity.Order;
@@ -15,9 +16,10 @@ import org.springframework.stereotype.Service;
 import in.ecommerce.ecommerce_backend.dto.ProductResponse;
 import in.ecommerce.ecommerce_backend.dto.order.TrackingResponse;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CartItemRepository cartRepository;
+    private final PaymentService paymentService;
 
     @Transactional
     public Order placeOrder(User user) {
@@ -62,14 +65,11 @@ public class OrderService {
 
             orderItemRepository.save(orderItem);
 
-            Integer itemTotal = cartItem.getProduct().getPriceCents()
-                    * cartItem.getQuantity();
-
-            totalAmount += itemTotal;
         }
+        PaymentSummary summary = paymentService.getSummary(user);
 
         // Update total amount
-        order.setTotalAmount(totalAmount);
+        order.setTotalAmount(summary.getTotalCostCents());
 
         // Save updated order
         orderRepository.save(order);
@@ -91,6 +91,11 @@ public class OrderService {
 
     public List<OrderItem> getOrderItems(Order order) {
         return orderItemRepository.findByOrder(order);
+    }
+
+
+    public List<OrderItem> getOrderItems(List<Order> orders) {
+        return orderItemRepository.findByOrderIn(orders);
     }
 
     public TrackingResponse getTracking(Long orderId, String productId) {
